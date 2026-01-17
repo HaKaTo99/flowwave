@@ -143,8 +143,8 @@ FlowWave 100% Gratis & Open Source. Dukungan Anda membantu kami mengembangkan fi
 
 | Platform | Link |
 |----------|------|
-| ☕ **Trakteer** | [trakteer.id/flowwave](https://trakteer.id/flowwave) |
-| 🎁 **Saweria** | [saweria.co/flowwave](https://saweria.co/flowwave) |
+| ☕ **** |   |
+| 🎁 **** |   |
 | 🐙 **GitHub Sponsors** | [github.com/sponsors/flowwave](https://github.com/sponsors/flowwave) |
 
 ---
