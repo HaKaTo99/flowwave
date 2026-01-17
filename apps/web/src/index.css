@@ -1,0 +1,420 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   FlowWave Premium Design System
+   Light & Dark Theme Support
+   ======================================== */
+
+/* ========================================
+   DARK THEME (Default)
+   ======================================== */
+:root,
+.dark {
+  /* Background Colors - Deep, rich night tones */
+  --color-bg-primary: #0b0b15;
+  /* Darker, flatter background for canvas to reduce eye strain */
+  --color-bg-secondary: #131320;
+  /* Slightly lighter for scrollbars/surfaces */
+  --color-bg-tertiary: #16213e;
+  /* Kept original as it was not in the instruction */
+  --color-surface: rgba(19, 19, 32, 0.7);
+  /* Glassy dark surface */
+  --color-surface-hover: rgba(25, 25, 40, 0.8);
+
+  /* Accent Colors - Vibrant but not neon */
+  --color-accent-primary: #6366f1;
+  --color-accent-secondary: #a855f7;
+  --color-accent-tertiary: #22d3ee;
+  --color-accent-success: #10b981;
+  /* Kept original as it was not in the instruction */
+  --color-accent-warning: #f59e0b;
+  /* Kept original as it was not in the instruction */
+  --color-accent-error: #ef4444;
+  /* Kept original as it was not in the instruction */
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  /* Kept original as it was not in the instruction */
+  --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+  /* Kept original as it was not in the instruction */
+
+  /* Text Colors - High legibility without harsh white */
+  --color-text-primary: #e2e8f0;
+  /* Off-white, softer than #ffffff */
+  --color-text-secondary: #94a3b8;
+  /* Muted blue-grey */
+  --color-text-muted: #64748b;
+
+  /* Borders - Subtle separation */
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(99, 102, 241, 0.4);
+
+  /* Shadows - Deep ambient glow */
+  --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
+  --shadow-card: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+
+  /* Component Defaults */
+  --node-bg: rgba(19, 19, 32, 0.85);
+  --sidebar-bg: rgba(11, 11, 21, 0.85);
+  /* Slightly darker than nodes for hierarchy */
+  --header-bg: rgba(11, 11, 21, 0.8);
+  --canvas-dot: #312e81;
+  /* Indigo-900: Subtle colored dots, better than grey */
+}
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+.light {
+  /* Background Colors - Soft Cloud Tones (No harsh #ffffff) */
+  --color-bg-primary: #f0f4f8;
+  /* Very soft cool grey-blue */
+  --color-bg-secondary: #ffffff;
+  /* Pure white for Cards to pop */
+  --color-bg-tertiary: #e2e8f0;
+  --color-surface: rgba(255, 255, 255, 0.85);
+  --color-surface-hover: rgba(255, 255, 255, 0.95);
+
+  /* Text Colors - High contrast but soft standard */
+  --color-text-primary: #0f172a;
+  /* Slate-900: Almost Black, very sharp */
+  --color-text-secondary: #334155;
+  /* Slate-700: Dark Grey for secondary text */
+  --color-text-muted: #64748b;
+  /* Slate-500 */
+
+  /* Borders */
+  --color-border: rgba(148, 163, 184, 0.35);
+  /* Slightly darker border for better definition */
+  --color-border-hover: rgba(99, 102, 241, 0.6);
+
+  /* Shadows - Soft daylight diffusion */
+  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.1);
+  --shadow-card: 0 4px 20px -5px rgba(148, 163, 184, 0.4);
+
+  /* Component Defaults */
+  --node-bg: rgba(255, 255, 255, 0.95);
+  /* More opaque in light mode */
+  --sidebar-bg: rgba(255, 255, 255, 0.9);
+  --header-bg: rgba(255, 255, 255, 0.85);
+  --canvas-dot: #94a3b8;
+  /* Slate-400: Darker dots for better visibility on light bg */
+}
+
+/* Base styles */
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode background gradient */
+.dark body,
+:root body {
+  background-image:
+    radial-gradient(at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+}
+
+/* Light mode background */
+.light body {
+  background-image:
+    radial-gradient(at 20% 30%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
+}
+
+/* Selection */
+::selection {
+  background: rgba(99, 102, 241, 0.4);
+  color: white;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent-primary);
+  border-radius: 4px;
+}
+
+/* ========================================
+   Theme-aware Components
+   ======================================== */
+
+/* App Container */
+.app-container {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+/* Header */
+.app-header {
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  border-color: var(--color-border);
+}
+
+/* Sidebar */
+.app-sidebar {
+  background: var(--sidebar-bg);
+  backdrop-filter: blur(20px);
+  border-color: var(--color-border);
+}
+
+/* Cards & Surfaces */
+.glass-card {
+  background: var(--color-surface);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ========================================
+   React Flow Styles
+   ======================================== */
+
+.react-flow__node {
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--node-bg);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+}
+
+.react-flow__node:hover {
+  border-color: var(--color-accent-primary);
+  box-shadow: var(--shadow-glow), var(--shadow-card);
+}
+
+.react-flow__node.selected {
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3), var(--shadow-glow);
+}
+
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: var(--color-accent-primary);
+  border: 2px solid var(--color-bg-primary);
+  transition: all 0.2s ease;
+}
+
+.react-flow__handle:hover {
+  background: var(--color-accent-secondary);
+  width: 14px;
+  height: 14px;
+}
+
+.react-flow__background {
+  background: var(--color-bg-primary) !important;
+}
+
+.react-flow__controls {
+  background: var(--color-surface) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+.react-flow__controls button {
+  background: transparent !important;
+  border: none !important;
+  color: var(--color-text-primary) !important;
+}
+
+.react-flow__controls button:hover {
+  background: var(--color-surface-hover) !important;
+}
+
+.react-flow__minimap {
+  background: var(--color-surface) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border) !important;
+  border-radius: 12px !important;
+}
+
+/* ========================================
+   Button Styles
+   ======================================== */
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(99, 102, 241, 0.5);
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent-primary);
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 5px var(--color-accent-primary);
+  }
+
+  50% {
+    box-shadow: 0 0 20px var(--color-accent-primary);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.bg-primary {
+  background: var(--color-bg-primary);
+}
+
+.bg-secondary {
+  background: var(--color-bg-secondary);
+}
+
+.bg-surface {
+  background: var(--color-surface);
+}
+
+.border-theme {
+  border-color: var(--color-border);
+}
+
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Status indicators */
+.status-online {
+  width: 8px;
+  height: 8px;
+  background: var(--color-accent-success);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--color-accent-success);
+}
+
+/* Pro Badge */
+.badge-pro {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}

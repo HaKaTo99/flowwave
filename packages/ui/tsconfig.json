@@ -1,0 +1,11 @@
+{
+    "extends": "@waveforai/tsconfig/base.json",
+    "compilerOptions": {
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "jsx": "react-jsx"
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

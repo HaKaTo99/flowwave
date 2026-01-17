@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    container_name: flowwave-server
+    init: true
+    restart: always
+    ports:
+      - "3002:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=file:/app/packages/database/prisma/dev.db
+    volumes:
+      # Persist SQLite database
+      - ./packages/database/prisma/dev.db:/app/packages/database/prisma/dev.db:rw
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: flowwave-web
+    restart: always
+    ports:
+      - "8080:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3002/api
+    depends_on:
+      - server

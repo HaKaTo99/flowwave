@@ -1,0 +1,24 @@
+{
+  "name": "flowwave",
+  "private": true,
+  "packageManager": "npm@10.0.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "prettier": "^3.0.0",
+    "vitest": "^1.2.0",
+    "@vitest/coverage-v8": "^1.2.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

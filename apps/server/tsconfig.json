@@ -1,0 +1,12 @@
+{
+    "extends": "@waveforai/tsconfig/base.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es2020",
+        "outDir": "dist"
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

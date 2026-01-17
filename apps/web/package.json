@@ -1,0 +1,31 @@
+{
+    "name": "web",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "vite --host",
+        "build": "vite build",
+        "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@waveforai/ui": "*",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "reactflow": "^11.10.0",
+        "y-indexeddb": "^9.0.12",
+        "y-websocket": "^3.0.0",
+        "yjs": "^13.6.29"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.0",
+        "@types/react-dom": "^18.2.0",
+        "@vitejs/plugin-react": "^4.2.0",
+        "@waveforai/tsconfig": "*",
+        "autoprefixer": "^10.4.23",
+        "postcss": "^8.5.6",
+        "tailwindcss": "^3.4.1",
+        "typescript": "^5.2.0",
+        "vite": "^5.0.0"
+    }
+}

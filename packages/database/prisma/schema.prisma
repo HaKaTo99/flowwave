@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+model Workflow {
+  id            String     @id @default(uuid())
+  name          String
+  description   String?
+  nodes         String     // JSON string
+  edges         String     // JSON string
+  version       String     @default("1.0.0")
+  metadata      String?    // JSON string
+  localVersion  Int        @default(1)
+  cloudVersion  Int?
+  syncStatus    String     @default("local_only") // local_only, synced, conflict
+  lastSyncedAt  DateTime?
+  created_by    String     @default("system")
+  isDeleted     Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  executions    Execution[]
+}
+
+model Execution {
+  id          String    @id @default(uuid())
+  workflowId  String
+  status      String    // pending, running, completed, failed, cancelled
+  input       String?   // JSON string
+  output      String?   // JSON string
+  logs        String?   // JSON string (array of logs)
+  duration    Int?      // milliseconds
+  errorMessage String?
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  workflow    Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+}
+
+model SyncQueue {
+  id          String   @id @default(uuid())
+  entityType  String
+  entityId    String
+  operation   String
+  data        String?  // JSON string
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+}

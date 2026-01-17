@@ -1,0 +1,9 @@
+{
+    "extends": "@waveforai/tsconfig/base.json",
+    "compilerOptions": {
+        "outDir": "dist"
+    },
+    "include": [
+        "."
+    ]
+}

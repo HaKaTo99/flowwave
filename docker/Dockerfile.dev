@@ -1,0 +1,46 @@
+# Development Dockerfile
+FROM node:18-alpine AS base
+
+# Install dependencies needed for building
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    sqlite \
+    openssl \
+    curl
+
+WORKDIR /app
+
+# Copy package files (we rely on monorepo structure)
+COPY package*.json ./
+COPY turbo.json ./
+COPY packages/core-engine/package.json ./packages/core-engine/
+COPY packages/ui/package.json ./packages/ui/
+COPY packages/connectors/package.json ./packages/connectors/
+COPY packages/database/package.json ./packages/database/
+COPY packages/tsconfig/package.json ./packages/tsconfig/
+COPY apps/web/package.json ./apps/web/
+COPY apps/server/package.json ./apps/server/
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Generate Prisma Client
+RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
+
+# Create data directory
+RUN mkdir -p /data && chmod 777 /data
+
+# Expose ports
+EXPOSE 3000 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:3001/health || exit 1
+
+# Command to run both (simplified for dev)
+CMD ["npm", "run", "dev"]
