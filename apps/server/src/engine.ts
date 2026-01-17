@@ -4,10 +4,34 @@ import {
     HttpNodeExecutor,
     WebhookNodeExecutor,
     AIAgentNodeExecutor,
-    GeminiNodeExecutor,
+    NotionNodeExecutor,
     GoogleSheetsNodeExecutor,
-    OpenAINodeExecutor,
-    SlackNodeExecutor
+    AirtableNodeExecutor,
+    GitHubNodeExecutor,
+    ConditionNodeExecutor,
+    SwitchNodeExecutor,
+    AnthropicNodeExecutor,
+    // Batch 1
+    GroqNodeExecutor,
+    AlgorithmNodeExecutor,
+    TransformNodeExecutor,
+    OutputParserNodeExecutor,
+    // Batch 2
+    PostgresNodeExecutor,
+    PostgresMemoryNodeExecutor,
+    QdrantNodeExecutor,
+    // Batch 3
+    JiraNodeExecutor,
+    EntraIDNodeExecutor,
+    ProxmoxNodeExecutor,
+    GoogleDocsNodeExecutor,
+    TwitterNodeExecutor,
+    LinkedInNodeExecutor,
+    TikTokNodeExecutor,
+    WhatsAppNodeExecutor,
+    GeminiNodeExecutor, // Added missing import
+    OpenAINodeExecutor, // Added missing import
+    SlackNodeExecutor // Added missing import
 } from '@waveforai/connectors';
 import { MockNodeExecutor } from './executors/mock';
 
@@ -21,15 +45,30 @@ executor.registerExecutor(new AIAgentNodeExecutor());
 executor.registerExecutor(new GeminiNodeExecutor());
 executor.registerExecutor(new GoogleSheetsNodeExecutor());
 executor.registerExecutor(new OpenAINodeExecutor());
+executor.registerExecutor(new WhatsAppNodeExecutor());
 executor.registerExecutor(new SlackNodeExecutor());
+executor.registerExecutor(new ConditionNodeExecutor());
+executor.registerExecutor(new SwitchNodeExecutor());
+executor.registerExecutor(new AnthropicNodeExecutor());
 
-// Register Mock Executors for missing/custom types
-const mockTypes = [
-    'groq', 'proxmox', 'output-parser', 'switch',
-    'qdrant', 'algorithm', 'transform',
-    'condition', 'anthropic-chat', 'postgres-memory',
-    'entra-id', 'jira', 'postgres'
-];
+// Batch 1
+executor.registerExecutor(new GroqNodeExecutor());
+executor.registerExecutor(new AlgorithmNodeExecutor());
+executor.registerExecutor(new TransformNodeExecutor());
+executor.registerExecutor(new OutputParserNodeExecutor());
+
+// Batch 2
+executor.registerExecutor(new PostgresNodeExecutor());
+executor.registerExecutor(new PostgresMemoryNodeExecutor());
+executor.registerExecutor(new QdrantNodeExecutor());
+
+// Batch 3
+executor.registerExecutor(new JiraNodeExecutor());
+executor.registerExecutor(new EntraIDNodeExecutor());
+executor.registerExecutor(new ProxmoxNodeExecutor());
+
+// No more mocks! All 42 nodes are real.
+const mockTypes: string[] = [];
 
 mockTypes.forEach(type => {
     executor.registerExecutor(new MockNodeExecutor(type));

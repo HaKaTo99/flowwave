@@ -1,5 +1,7 @@
 import { DragEvent, useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { NodeIcon } from './NodeIcon';
+import { useCases } from './CanvasEmptyState';
 
 interface NodeDef {
     type: string;
@@ -71,6 +73,7 @@ const nodeCategories: NodeCategory[] = [
         nodes: [
             { type: 'loop-items', label: 'Loop Items', icon: '🔄', color: 'from-cyan-400 to-blue-500' },
             { type: 'code', label: 'Code', icon: '{ }', color: 'from-slate-500 to-gray-600' },
+            { type: 'switch', label: 'Switch', icon: '⑂', color: 'from-gray-500 to-slate-600' },
             { type: 'edit-fields', label: 'Edit Fields', icon: '✏️', color: 'from-teal-400 to-emerald-500' },
             { type: 'structured-output', label: 'Parser', icon: '📊', color: 'from-lime-400 to-green-500' },
         ]
@@ -83,6 +86,7 @@ const nodeCategories: NodeCategory[] = [
             { type: 'telegram', label: 'Telegram', icon: '✈️', color: 'from-sky-400 to-blue-500' },
             { type: 'discord', label: 'Discord', icon: '🎮', color: 'from-indigo-500 to-violet-600' },
             { type: 'slack', label: 'Slack', icon: '💬', color: 'from-purple-500 to-fuchsia-500' },
+            { type: 'whatsapp', label: 'WhatsApp', icon: '📞', color: 'from-green-500 to-emerald-600' },
         ]
     },
     {
@@ -99,17 +103,32 @@ const nodeCategories: NodeCategory[] = [
         name: '📱 Apps',
         icon: '📱',
         nodes: [
-            { type: 'notion', label: 'Notion', icon: '📝', color: 'from-slate-500 to-gray-600' },
             { type: 'google-sheets', label: 'Sheets', icon: '📊', color: 'from-green-500 to-emerald-500' },
-            { type: 'airtable', label: 'Airtable', icon: '📋', color: 'from-yellow-400 to-orange-500' },
+            { type: 'google-docs', label: 'Docs', icon: '📝', color: 'from-blue-500 to-indigo-500' },
+            { type: 'google-drive', label: 'Drive', icon: '📁', color: 'from-yellow-500 to-amber-500' },
+            { type: 'google-calendar', label: 'Calendar', icon: '📅', color: 'from-blue-400 to-cyan-500' },
+            { type: 'notion', label: 'Notion', icon: '📝', color: 'from-slate-500 to-gray-600' },
+            { type: 'jira', label: 'Jira', icon: '🎫', color: 'from-blue-600 to-indigo-700' },
+            { type: 'trello', label: 'Trello', icon: '📋', color: 'from-blue-400 to-indigo-500' },
             { type: 'github', label: 'GitHub', icon: '🐙', color: 'from-gray-600 to-slate-700' },
+        ]
+    },
+    {
+        name: '📢 Social Media',
+        icon: '📢',
+        nodes: [
+            { type: 'twitter', label: 'Twitter (X)', icon: '✖️', color: 'from-slate-700 to-black' },
+            { type: 'linkedin', label: 'LinkedIn', icon: '💼', color: 'from-blue-600 to-cyan-700' },
+            { type: 'tiktok', label: 'TikTok', icon: '🎵', color: 'from-black to-pink-500' },
+            { type: 'facebook', label: 'Facebook', icon: '📘', color: 'from-blue-500 to-blue-700' },
+            { type: 'instagram', label: 'Instagram', icon: '📸', color: 'from-purple-500 to-pink-500' },
         ]
     }
 ];
 
 const totalNodes = nodeCategories.reduce((acc, cat) => acc + cat.nodes.length, 0);
 
-const Sidebar = () => {
+const Sidebar = ({ onUseTemplate }: { onUseTemplate?: (template: string) => void }) => {
     const { isDark } = useTheme();
     const [expandedCategories, setExpandedCategories] = useState<string[]>([
         '🤖 AI & Agents',
@@ -178,6 +197,65 @@ const Sidebar = () => {
 
             {/* Node Categories */}
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
+                {/* Templates Section */}
+                <div className="animate-fade-in-up">
+                    <button
+                        onClick={() => toggleCategory('📂 Templates')}
+                        className={`w-full px-4 py-3 text-left text-sm font-semibold rounded-xl flex items-center justify-between transition-all duration-200 group
+                                ${isDark
+                                ? 'text-white/80 hover:bg-white/5'
+                                : 'text-slate-900 hover:bg-slate-100'
+                            }`}
+                    >
+                        <span className="flex items-center gap-2">
+                            📂 Templates
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <span className={`text-xs px-2 py-0.5 rounded-full ${isDark ? 'text-white/40 bg-white/5' : 'text-slate-500 bg-slate-100'}`}>
+                                {useCases.length}
+                            </span>
+                            <span className={`text-xs transition-transform duration-200 ${isDark ? 'text-white/40' : 'text-slate-400'}
+                                              ${expandedCategories.includes('📂 Templates') ? 'rotate-180' : ''}`}>
+                                ▼
+                            </span>
+                        </div>
+                    </button>
+
+                    {/* Template Items */}
+                    {expandedCategories.includes('📂 Templates') && (
+                        <div className="pl-2 mt-2 space-y-1.5">
+                            {useCases.map((template, idx) => (
+                                <div
+                                    key={template.title}
+                                    onClick={() => onUseTemplate?.(template.action)}
+                                    className={`
+                                            p-3 rounded-xl cursor-pointer transition-all duration-300
+                                            border hover:scale-[1.02] active:scale-[0.98]
+                                            flex items-center gap-3
+                                            ${isDark
+                                            ? 'bg-white/[0.03] border-white/10 hover:border-white/30 hover:shadow-lg hover:shadow-indigo-500/10'
+                                            : 'bg-white border-slate-100 hover:border-indigo-300 hover:shadow-md'
+                                        }
+                                        `}
+                                >
+                                    <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${template.color} 
+                                                        flex items-center justify-center text-lg shadow-lg`}>
+                                        {template.icon}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className={`text-sm font-medium truncate ${isDark ? 'text-white/90' : 'text-slate-900'}`}>
+                                            {template.title.replace(' can', '')}
+                                        </div>
+                                        <div className={`text-[10px] truncate ${isDark ? 'text-white/50' : 'text-slate-500'}`}>
+                                            {template.description}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
                 {filteredCategories.map((category) => (
                     <div key={category.name} className="animate-fade-in-up">
                         {/* Category Header */}
@@ -225,7 +303,7 @@ const Sidebar = () => {
                                     >
                                         <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${node.color} 
                                                         flex items-center justify-center text-lg shadow-lg`}>
-                                            {node.icon}
+                                            <NodeIcon type={node.type} className="w-5 h-5 text-white" />
                                         </div>
                                         <span className={`text-sm font-medium flex-1 ${isDark ? 'text-white/90' : 'text-slate-900'}`}>
                                             {node.label}

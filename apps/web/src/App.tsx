@@ -23,7 +23,7 @@ import ThemeToggle from './components/ThemeToggle';
 import { WorkflowList } from './components/WorkflowList';
 import { ExecutionHistory } from './components/ExecutionHistory';
 import { Confetti } from './components/Confetti';
-import { CanvasEmptyState } from './components/CanvasEmptyState';
+// import { CanvasEmptyState } from './components/CanvasEmptyState';
 import { useToast } from './components/Toast';
 import { ConnectionStatus } from './components/LoadingComponents';
 import { useSyncManager } from './hooks/useSyncManager';
@@ -57,7 +57,13 @@ const nodeTypes = {
     'switch': CustomNode,
     'proxmox': CustomNode,
     'output-parser': CustomNode,
-    'openai-chat': CustomNode
+    'openai-chat': CustomNode,
+    'google-calendar': CustomNode,
+    'google-drive': CustomNode,
+    'google-docs': CustomNode,
+    'jira': CustomNode,
+    'trello': CustomNode,
+    'linear': CustomNode
 };
 
 const Flow = () => {
@@ -415,6 +421,76 @@ const Flow = () => {
                 { id: 'e3-4', source: '3', target: '4' },
                 { id: 'e4-5', source: '4', target: '5' }
             ];
+        } else if (templateAction.includes('Comms')) {
+            // Communication: WhatsApp Blast
+            newNodes = [
+                { id: '1', type: 'webhook', position: { x: 50, y: 250 }, data: { label: 'Trigger Announcement', type: 'webhook' } },
+                { id: '2', type: 'google-sheets', position: { x: 300, y: 250 }, data: { label: 'Get Employee List', type: 'google-sheets', method: 'read: all' } },
+                { id: '3', type: 'loop-items', position: { x: 550, y: 250 }, data: { label: 'Loop Employees', type: 'loop-items' } },
+                { id: '4', type: 'ai-agent', position: { x: 800, y: 250 }, data: { label: 'Personalize Msg', type: 'ai-agent', system: 'Add name and department context.' } },
+                { id: '5', type: 'whatsapp', position: { x: 1050, y: 250 }, data: { label: 'Send WhatsApp', type: 'whatsapp', method: 'send: template' } }
+            ];
+            newEdges = [
+                { id: 'e1-2', source: '1', target: '2' },
+                { id: 'e2-3', source: '2', target: '3' },
+                { id: 'e3-4', source: '3', target: '4', label: 'Item' },
+                { id: 'e4-5', source: '4', target: '5' }
+            ];
+        } else if (templateAction.includes('Social')) {
+            // Social Media: Cross-Post
+            newNodes = [
+                { id: '1', type: 'webhook', position: { x: 50, y: 250 }, data: { label: 'New Content Ready' } },
+                { id: '2', type: 'ai-agent', position: { x: 300, y: 250 }, data: { label: 'Content Adapter', type: 'ai-agent', system: 'Resize image and generate captions for each platform.' } },
+                { id: '3', type: 'tiktok', position: { x: 600, y: 150 }, data: { label: 'Upload to TikTok', type: 'tiktok' } },
+                { id: '4', type: 'instagram', position: { x: 600, y: 350 }, data: { label: 'Post to Instagram', type: 'instagram' } },
+                { id: '5', type: 'slack', position: { x: 850, y: 250 }, data: { label: 'Notify Marketing', type: 'slack' } }
+            ];
+            newEdges = [
+                { id: 'e1-2', source: '1', target: '2' },
+                { id: 'e2-3', source: '2', target: '3' },
+                { id: 'e2-4', source: '2', target: '4' },
+                { id: 'e3-5', source: '3', target: '5' },
+                { id: 'e4-5', source: '4', target: '5' }
+            ];
+        } else if (templateAction.includes('Trader')) {
+            // Trader: Stock Analysis (Based on Image)
+            newNodes = [
+                // Trigger & Input Processing
+                { id: '1', type: 'telegram', position: { x: 50, y: 300 }, data: { label: 'Telegram Trigger', type: 'telegram', method: 'Updates: message' } },
+                { id: '2', type: 'switch', position: { x: 300, y: 300 }, data: { label: 'Input Type?', type: 'switch', method: 'mode: Rules', outputs: ['Voice', 'Text'] } },
+
+                // Voice Path
+                { id: '3', type: 'http-request', position: { x: 550, y: 150 }, data: { label: 'Download File', type: 'http-request', method: 'GET' } },
+                { id: '4', type: 'openai-chat', position: { x: 800, y: 150 }, data: { label: 'Transcribe Audio', type: 'openai-chat', model: 'whisper-1' } },
+
+                // Main Intelligence
+                { id: '5', type: 'ai-agent', position: { x: 800, y: 350 }, data: { label: 'Stock Analyst Agent', type: 'ai-agent', system: 'Analyze chart patterns and news sentiment.' } },
+
+                // Tools & Context (Below Agent)
+                { id: '6', type: 'openai-chat', position: { x: 650, y: 550 }, data: { label: 'GPT-4 Vision', type: 'openai-chat' } },
+                { id: '7', type: 'postgres', position: { x: 800, y: 550 }, data: { label: 'Chat Memory', type: 'postgres' } },
+                { id: '8', type: 'http-request', position: { x: 950, y: 550 }, data: { label: 'Get Chart API', type: 'http-request', url: 'https://api.chart-img.com/v1/tradingview' } },
+
+                // Output
+                { id: '9', type: 'telegram', position: { x: 1100, y: 350 }, data: { label: 'Send Analysis', type: 'telegram', method: 'send: message' } }
+            ];
+
+            newEdges = [
+                // Flow
+                { id: 'e1-2', source: '1', target: '2' },
+                { id: 'e2-3', source: '2', target: '3', label: 'Voice', sourceHandle: 'Voice' },
+                { id: 'e3-4', source: '3', target: '4' },
+                { id: 'e4-5', source: '4', target: '5' },
+                { id: 'e2-5', source: '2', target: '5', label: 'Text', sourceHandle: 'Text' },
+
+                // Agent Connections
+                { id: 'e6-5', source: '6', target: '5', animated: true, style: { strokeDasharray: '5,5' }, label: 'Model' },
+                { id: 'e7-5', source: '7', target: '5', animated: true, style: { strokeDasharray: '5,5' }, label: 'Memory' },
+                { id: 'e8-5', source: '8', target: '5', animated: true, style: { strokeDasharray: '5,5' }, label: 'Tool' },
+
+                // Final Output
+                { id: 'e5-9', source: '5', target: '9' }
+            ];
         } else {
             // Fallback
             newNodes = [
@@ -614,7 +690,7 @@ const Flow = () => {
 
             {/* Main Content */}
             <div className="flex flex-1 overflow-hidden relative">
-                <Sidebar />
+                <Sidebar onUseTemplate={handleUseTemplate} />
 
                 <div className="flex-1 h-full relative" ref={reactFlowWrapper}>
                     <ReactFlow
@@ -645,10 +721,17 @@ const Flow = () => {
                             size={1}
                         />
                         {nodes.length === 0 && (
-                            <CanvasEmptyState
-                                onOpenTemplates={() => setShowWorkflowList(true)}
-                                onUseTemplate={handleUseTemplate}
-                            />
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div className={`text-center p-8 rounded-2xl border-2 border-dashed ${isDark ? 'border-white/10 bg-[#0f0f1a]/50' : 'border-slate-200 bg-white/50'}`}>
+                                    <div className="text-6xl mb-4 opacity-50">✨</div>
+                                    <h3 className={`text-xl font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                                        Start Your Workflow
+                                    </h3>
+                                    <p className={`text-sm ${isDark ? 'text-white/60' : 'text-slate-500'}`}>
+                                        Drag nodes from the sidebar or choose a template from the menu.
+                                    </p>
+                                </div>
+                            </div>
                         )}
                     </ReactFlow>
                 </div>

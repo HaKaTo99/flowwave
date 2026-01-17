@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import { useTheme } from '../context/ThemeContext';
+import { NodeIcon } from './NodeIcon';
 
 const nodeConfig: Record<string, { icon: string; gradient: string }> = {
     'http-request': { icon: '🌐', gradient: 'from-purple-500 to-indigo-500' },
@@ -27,6 +28,12 @@ const nodeConfig: Record<string, { icon: string; gradient: string }> = {
     'proxmox': { icon: '🖥️', gradient: 'from-orange-600 to-red-600' },
     'output-parser': { icon: '🛠️', gradient: 'from-slate-600 to-gray-700' },
     'slack': { icon: '#', gradient: 'from-purple-500 to-fuchsia-500' },
+    'whatsapp': { icon: '📞', gradient: 'from-green-500 to-emerald-600' },
+    'twitter': { icon: '✖️', gradient: 'from-slate-700 to-black' },
+    'linkedin': { icon: '💼', gradient: 'from-blue-600 to-cyan-700' },
+    'tiktok': { icon: '🎵', gradient: 'from-black to-pink-500' },
+    'facebook': { icon: '📘', gradient: 'from-blue-500 to-blue-700' },
+    'instagram': { icon: '📸', gradient: 'from-purple-500 to-pink-500' },
     'openai': { icon: '🤖', gradient: 'from-green-500 to-emerald-600' },
     'entra-id': { icon: '🔑', gradient: 'from-blue-600 to-indigo-600' },
     'jira': { icon: '📋', gradient: 'from-blue-500 to-cyan-500' },
@@ -84,7 +91,7 @@ const CustomNode = ({ data, selected, type }: any) => {
                     bg-gradient-to-br ${config.gradient}
                     shadow-lg
                 `}>
-                    {config.icon}
+                    <NodeIcon type={nodeType} className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
                     <div className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>{data.label}</div>

@@ -2,6 +2,7 @@ import Fastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import cors from '@fastify/cors';
 import { db } from './db';
 import { WorkflowExecutor } from '@waveforai/core-engine';
+import { totalNodeCount } from '@waveforai/connectors';
 import { z } from 'zod';
 import { initQueue, addWorkflowJob } from './queue';
 import { WebSocketServer } from 'ws';
@@ -301,7 +302,7 @@ export class WaveforAIServer {
                 timestamp: new Date().toISOString(),
                 version: '1.0.0',
                 features: {
-                    nodes: 35,
+                    nodes: totalNodeCount,
                     aiAgents: true,
                     rag: true,
                     scheduling: true

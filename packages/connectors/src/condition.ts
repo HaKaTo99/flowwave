@@ -46,7 +46,9 @@ export class ConditionNodeExecutor extends BaseNodeExecutor {
                         const evaluatedExpression = expression.replace(/\$\{(\w+)\}/g, (match: string, key: string) => {
                             return JSON.stringify(context.data[key] ?? null);
                         });
-                        result = eval(evaluatedExpression);
+                        // Use new Function for safer runtime evaluation than eval
+                        const fn = new Function(`return (${evaluatedExpression})`);
+                        result = fn();
                     }
                 } catch (e) {
                     this.addLog(context, 'error', `Failed to evaluate expression: ${e}`, node.id);

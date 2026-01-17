@@ -340,3 +340,64 @@ export class GitHubNodeExecutor extends BaseNodeExecutor {
         }
     }
 }
+
+/**
+ * Google Docs Node
+ * Read content from Google Docs
+ */
+export class GoogleDocsNodeExecutor extends BaseNodeExecutor {
+    type = 'google-docs';
+
+    async execute(node: WorkflowNode, context: ExecutionContext): Promise<Record<string, any>> {
+        const apiKey = node.data.apiKey || process.env.GOOGLE_API_KEY;
+        const documentId = node.data.documentId;
+        const operation = node.data.operation || 'read'; // 'read'
+
+        if (!apiKey || !documentId) {
+            throw new Error('Google API Key and Document ID are required');
+        }
+
+        this.addLog(context, 'info', `Google Docs ${operation} on ${documentId}`, node.id);
+
+        try {
+            let content = '';
+
+            // Fetch document structure
+            const url = `https://docs.googleapis.com/v1/documents/${documentId}?key=${apiKey}`;
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(`Google Docs Error: ${error.error?.message || response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            // Simple text extractor from Docs JSON structure
+            if (data.body && data.body.content) {
+                content = data.body.content
+                    .map((element: any) => {
+                        if (element.paragraph) {
+                            return element.paragraph.elements
+                                .map((ele: any) => ele.textRun?.content || '')
+                                .join('');
+                        }
+                        return '';
+                    })
+                    .join('\n');
+            }
+
+            return {
+                success: true,
+                operation,
+                documentId,
+                title: data.title,
+                content: content.trim(),
+                raw: data
+            };
+        } catch (error: any) {
+            this.addLog(context, 'error', `Google Docs Error: ${error.message}`, node.id);
+            throw error;
+        }
+    }
+}

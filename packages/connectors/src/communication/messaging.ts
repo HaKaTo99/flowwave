@@ -204,3 +204,72 @@ export class SlackNodeExecutor extends BaseNodeExecutor {
         }
     }
 }
+
+/**
+ * WhatsApp Node
+ * Send messages via Meta Graph API
+ */
+export class WhatsAppNodeExecutor extends BaseNodeExecutor {
+    type = 'whatsapp';
+
+    async execute(node: WorkflowNode, context: ExecutionContext): Promise<Record<string, any>> {
+        const phoneNumberId = node.data.phoneNumberId || process.env.WHATSAPP_PHONE_NUMBER_ID;
+        const accessToken = node.data.accessToken || process.env.WHATSAPP_ACCESS_TOKEN;
+        const to = node.data.to || context.data.to;
+        const message = node.data.message || context.data.message;
+        const template = node.data.template;
+
+        if (!to) {
+            throw new Error('WhatsApp requires "to" phone number');
+        }
+
+        this.addLog(context, 'info', `Sending WhatsApp to ${to}`, node.id);
+
+        // Simulation Mode if keys missing
+        if (!phoneNumberId || !accessToken) {
+            this.addLog(context, 'warn', '[SIMULATION] Missing WhatsApp Keys', node.id);
+            return { sent: true, to, message, simulated: true };
+        }
+
+        const url = `https://graph.facebook.com/v19.0/${phoneNumberId}/messages`;
+
+        const payload: any = {
+            messaging_product: 'whatsapp',
+            to: to,
+        };
+
+        if (template) {
+            payload.type = 'template';
+            payload.template = {
+                name: template,
+                language: { code: node.data.language || 'en_US' }
+            };
+        } else {
+            payload.type = 'text';
+            payload.text = { body: message || '' };
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(JSON.stringify(err));
+            }
+
+            const data = await response.json();
+            return { sent: true, id: data.messages?.[0]?.id };
+
+        } catch (error: any) {
+            this.addLog(context, 'error', `WhatsApp Error: ${error.message}`, node.id);
+            throw error;
+        }
+    }
+}

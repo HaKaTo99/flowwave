@@ -8,7 +8,7 @@ interface UseCase {
     action: string;
 }
 
-const useCases: UseCase[] = [
+export const useCases: UseCase[] = [
     {
         title: 'IT Ops can',
         description: 'On-board new employees automatically',
@@ -92,6 +92,27 @@ const useCases: UseCase[] = [
         icon: '📊',
         color: 'from-lime-500 to-green-600',
         action: 'Inventory: Stock Alert'
+    },
+    {
+        title: 'Comms can',
+        description: 'Send WhatsApp announcements to all employees',
+        icon: '📢',
+        color: 'from-green-500 to-emerald-600',
+        action: 'Comms: WhatsApp Blast'
+    },
+    {
+        title: 'Social can',
+        description: 'Cross-post content to TikTok & Instagram',
+        icon: '📱',
+        color: 'from-purple-500 to-pink-500',
+        action: 'Social: Cross-Post'
+    },
+    {
+        title: 'Trader can',
+        description: 'Analyze stocks via Telegram voice notes',
+        icon: '📈',
+        color: 'from-blue-600 to-cyan-500',
+        action: 'Trader: Stock Analysis'
     }
 ];
 

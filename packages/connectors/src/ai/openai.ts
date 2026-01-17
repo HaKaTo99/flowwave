@@ -102,65 +102,7 @@ export class OpenAINodeExecutor extends BaseNodeExecutor {
     }
 }
 
-/**
- * Anthropic Claude Node
- * Connect to Anthropic Claude models
- */
-export class AnthropicNodeExecutor extends BaseNodeExecutor {
-    type = 'anthropic-chat';
 
-    async execute(node: WorkflowNode, context: ExecutionContext): Promise<Record<string, any>> {
-        const apiKey = node.data.apiKey || process.env.ANTHROPIC_API_KEY;
-
-        if (!apiKey) {
-            throw new Error('Anthropic API Key is required');
-        }
-
-        const model = node.data.model || 'claude-3-sonnet-20240229';
-        const userMessage = context.data.message || context.data.input || node.data.message || '';
-
-        if (!userMessage) {
-            return { response: '', usage: null };
-        }
-
-        this.addLog(context, 'info', `Calling Anthropic ${model}`, node.id);
-
-        try {
-            const response = await fetch('https://api.anthropic.com/v1/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': apiKey,
-                    'anthropic-version': '2023-06-01'
-                },
-                body: JSON.stringify({
-                    model,
-                    max_tokens: node.data.maxTokens || 1000,
-                    messages: [{ role: 'user', content: userMessage }],
-                    system: node.data.systemPrompt || undefined
-                })
-            });
-
-            if (!response.ok) {
-                const error = await response.text();
-                throw new Error(`Anthropic API Error: ${error}`);
-            }
-
-            const data = await response.json();
-            const assistantMessage = data.content[0]?.text || '';
-
-            return {
-                response: assistantMessage,
-                message: assistantMessage,
-                model,
-                usage: data.usage
-            };
-        } catch (error: any) {
-            this.addLog(context, 'error', `Anthropic Error: ${error.message}`, node.id);
-            throw error;
-        }
-    }
-}
 
 /**
  * Google Gemini Node
