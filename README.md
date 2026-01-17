@@ -8,7 +8,7 @@
 **Open Source • Self-Hosted • Free Forever**
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/yourusername/flowwave?style=social)](https://github.com/yourusername/flowwave)
+[![GitHub Stars](https://img.shields.io/github/stars/yourusername/flowwave?style=social)](https://github.com/HaKaTo99/flowwave)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
 
 [Demo](https://flowwave.dev) • [Documentation](#-manual-pengguna-user-guide) • [Support](#-dukungan--donasi)
