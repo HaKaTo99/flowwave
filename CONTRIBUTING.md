@@ -5,7 +5,7 @@ Thank you for your interest in contributing to FlowWave! 🎉
 ## Getting Started
 
 1. Fork the repository
-2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/flowwave.git`
+2. Clone your fork: `git clone https://github.com/HaKaTo99/flowwave.git`
 3. Create a branch: `git checkout -b feature/my-feature`
 4. Make your changes
 5. Run tests: `npm run test`
