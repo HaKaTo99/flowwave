@@ -231,23 +231,24 @@ const Sidebar = ({ onUseTemplate }: { onUseTemplate?: (template: string) => void
                                     className={`
                                             p-3 rounded-xl cursor-pointer transition-all duration-300
                                             border hover:scale-[1.02] active:scale-[0.98]
-                                            flex items-center gap-3
-                                            ${isDark
-                                            ? 'bg-white/[0.03] border-white/10 hover:border-white/30 hover:shadow-lg hover:shadow-indigo-500/10'
-                                            : 'bg-white border-slate-100 hover:border-indigo-300 hover:shadow-md'
+                                        group relative overflow-hidden p-3 rounded-lg border cursor-pointer transition-all duration-200
+                                        hover:shadow-md hover:scale-[1.02]
+                                        ${isDark
+                                            ? 'bg-[#1e1e2d] border-white/5 hover:border-indigo-500/50'
+                                            : 'bg-white border-slate-100 hover:border-indigo-200'
                                         }
-                                        `}
+                                    `}
                                 >
-                                    <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${template.color} 
-                                                        flex items-center justify-center text-lg shadow-lg`}>
-                                        {template.icon}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className={`text-sm font-medium truncate ${isDark ? 'text-white/90' : 'text-slate-900'}`}>
-                                            {template.title.replace(' can', '')}
-                                        </div>
-                                        <div className={`text-[10px] truncate ${isDark ? 'text-white/50' : 'text-slate-500'}`}>
-                                            {template.description}
+                                    <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${template.color}`}></div>
+                                    <div className="flex items-start gap-3 pl-2">
+                                        <span className="text-xl mt-0.5">{template.icon}</span>
+                                        <div>
+                                            <div className={`text-xs font-bold mb-0.5 ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                                                {template.title}
+                                            </div>
+                                            <div className={`text-[10px] leading-tight line-clamp-2 ${isDark ? 'text-white/50' : 'text-slate-500'}`}>
+                                                {template.description}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -256,62 +257,53 @@ const Sidebar = ({ onUseTemplate }: { onUseTemplate?: (template: string) => void
                     )}
                 </div>
 
+                {/* Node Categories */}
                 {filteredCategories.map((category) => (
-                    <div key={category.name} className="animate-fade-in-up">
-                        {/* Category Header */}
+                    <div key={category.name} className="mb-1">
                         <button
                             onClick={() => toggleCategory(category.name)}
-                            className={`w-full px-4 py-3 text-left text-sm font-semibold rounded-xl flex items-center justify-between transition-all duration-200 group
-                                ${isDark
-                                    ? 'text-white/80 hover:bg-white/5'
-                                    : 'text-slate-900 hover:bg-slate-100'
+                            className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200
+                                ${expandedCategories.includes(category.name)
+                                    ? isDark ? 'bg-white/5 text-white' : 'bg-slate-50 text-slate-800'
+                                    : isDark ? 'text-white/60 hover:bg-white/5' : 'text-slate-500 hover:bg-slate-50'
                                 }`}
                         >
-                            <span className="flex items-center gap-2">
-                                {category.name}
-                            </span>
-                            <div className="flex items-center gap-2">
-                                <span className={`text-xs px-2 py-0.5 rounded-full ${isDark ? 'text-white/40 bg-white/5' : 'text-slate-500 bg-slate-100'}`}>
-                                    {category.nodes.length}
-                                </span>
-                                <span className={`text-xs transition-transform duration-200 ${isDark ? 'text-white/40' : 'text-slate-400'}
-                                              ${expandedCategories.includes(category.name) ? 'rotate-180' : ''}`}>
-                                    ▼
-                                </span>
+                            <div className="flex items-center gap-2 font-semibold text-sm">
+                                <span>{category.icon}</span> {category.name}
                             </div>
+                            <span className={`text-xs opacity-50 transition-transform duration-200 ${expandedCategories.includes(category.name) ? 'rotate-90' : ''}`}>
+                                ▶
+                            </span>
                         </button>
 
-                        {/* Nodes */}
                         {expandedCategories.includes(category.name) && (
-                            <div className="pl-2 mt-2 space-y-1.5">
-                                {category.nodes.map((node, idx) => (
+                            <div className="grid grid-cols-1 gap-1.5 mt-1.5 px-2 pb-2">
+                                {category.nodes.map((node) => (
                                     <div
                                         key={node.type}
-                                        className={`
-                                            p-3 rounded-xl cursor-grab transition-all duration-300
-                                            border hover:scale-[1.02] active:scale-[0.98]
-                                            flex items-center gap-3
-                                            ${isDark
-                                                ? 'bg-white/[0.03] border-white/10 hover:border-white/30 hover:shadow-lg hover:shadow-indigo-500/10'
-                                                : 'bg-white border-slate-100 hover:border-indigo-300 hover:shadow-md'
-                                            }
-                                            ${node.premium ? 'ring-1 ring-amber-400/50' : ''}
-                                        `}
-                                        style={{ animationDelay: `${idx * 50}ms` }}
                                         onDragStart={(event) => onDragStart(event, node.type)}
                                         draggable
+                                        className={`
+                                            flex items-center gap-3 p-2.5 rounded-lg border cursor-grab active:cursor-grabbing transition-all duration-200
+                                            hover:shadow-sm hover:translate-x-1
+                                            ${isDark
+                                                ? 'bg-[#0f0f1a] border-white/5 hover:bg-[#1e1e2d] hover:border-white/10 text-white/90'
+                                                : 'bg-white border-slate-100 hover:border-slate-300 text-slate-700'
+                                            }
+                                        `}
                                     >
-                                        <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${node.color} 
-                                                        flex items-center justify-center text-lg shadow-lg`}>
-                                            <NodeIcon type={node.type} className="w-5 h-5 text-white" />
+                                        <div className={`
+                                            w-8 h-8 rounded-lg flex items-center justify-center text-sm shadow-inner
+                                            bg-gradient-to-br ${node.color} text-white
+                                        `}>
+                                            <NodeIcon type={node.type} className="w-4 h-4" />
                                         </div>
-                                        <span className={`text-sm font-medium flex-1 ${isDark ? 'text-white/90' : 'text-slate-900'}`}>
-                                            {node.label}
-                                        </span>
+                                        <div className="flex flex-col">
+                                            <span className="text-xs font-semibold">{node.label}</span>
+                                        </div>
                                         {node.premium && (
-                                            <span className="text-[10px] bg-gradient-to-r from-amber-400 to-orange-500 
-                                                           text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">
-                                                Pro
+                                            <span className="ml-auto text-[10px] px-1.5 py-0.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-full font-bold">
+                                                PRO
                                             </span>
                                         )}
                                     </div>

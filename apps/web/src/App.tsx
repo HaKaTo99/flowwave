@@ -648,31 +648,45 @@ const Flow = () => {
             {/* Header - Glassmorphism */}
             <div className="app-header flex h-16 border-b px-6 items-center justify-between shadow-lg z-20 border-theme">
                 <div className="flex items-center gap-4">
+                    {/* Brand */}
                     <div className="font-bold text-xl bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent flex items-center gap-2">
                         <span className="text-2xl">🌊</span> FlowWave
                     </div>
+
                     <div className={`h-6 w-px ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}></div>
-                    <span className={`text-sm px-3 py-1.5 rounded-lg border font-medium transition-all ${isDark
-                        ? 'text-white/70 bg-white/5 border-white/10'
-                        : 'text-slate-900 bg-white border-slate-200 shadow-sm'
-                        }`}>
-                        {currentWorkflowName}
-                    </span>
-                    <button
-                        onClick={handleNewWorkflow}
-                        className={`text-xs px-3 py-1.5 rounded-lg border transition-all font-medium flex items-center gap-1 ${isDark
-                            ? 'text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 border-indigo-500/30 hover:border-indigo-500/50'
-                            : 'text-indigo-600 hover:bg-indigo-50 bg-white border-indigo-200 shadow-sm'
-                            }`}
-                    >
-                        + New
-                    </button>
-                    <div className={`h-6 w-px ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}></div>
-                    <SyncToggle mode={mode} setMode={switchMode} />
-                    <ConnectionStatus connected={backendConnected} label={backendConnected ? 'API Connected' : 'API Offline'} />
+
+                    {/* Workflow Title & Status */}
+                    <div className="flex items-center gap-3">
+                        <span className={`text-sm px-3 py-1.5 rounded-lg border font-medium transition-all ${isDark
+                            ? 'text-white/70 bg-white/5 border-white/10'
+                            : 'text-slate-900 bg-white border-slate-200 shadow-sm'
+                            }`}>
+                            {currentWorkflowName}
+                        </span>
+
+                        {/* Status Pack */}
+                        <div className={`flex items-center gap-2 px-2 py-1 rounded-lg border ${isDark ? 'bg-black/20 border-white/5' : 'bg-slate-50 border-slate-200'}`}>
+                            <SyncToggle mode={mode} setMode={switchMode} />
+                            <div className={`h-4 w-px ${isDark ? 'bg-white/10' : 'bg-slate-300'}`}></div>
+                            <ConnectionStatus connected={backendConnected} label={backendConnected ? 'Connected' : 'Offline'} />
+                            <div className={`h-4 w-px ${isDark ? 'bg-white/10' : 'bg-slate-300'}`}></div>
+                            <SyncStatus status={syncStatus} />
+                        </div>
+                    </div>
                 </div>
 
-                <div className="flex items-center gap-4">
+                {/* Right Actions */}
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={handleNewWorkflow}
+                        className={`px-3 py-2 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${isDark
+                            ? 'bg-white/5 border border-white/10 text-white/80 hover:bg-white/10 hover:border-white/20'
+                            : 'bg-white border border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900'
+                            }`}
+                    >
+                        <span>+</span> New
+                    </button>
+
                     <Toolbar
                         onSave={handleSave}
                         onRun={handleRun}
@@ -681,9 +695,9 @@ const Flow = () => {
                         saving={saving}
                         running={running}
                     />
-                    <div className="h-6 w-px bg-theme border-theme"></div>
-                    <SyncStatus status={syncStatus} />
-                    <div className="h-6 w-px bg-theme border-theme"></div>
+
+                    <div className={`h-6 w-px ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}></div>
+
                     <ThemeToggle />
                 </div>
             </div>

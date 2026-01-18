@@ -29,24 +29,40 @@ const NodeInspector = ({ selectedNode, setNodes, onDelete }: NodeInspectorProps)
     }, [selectedNode, setNodes]);
 
     if (!selectedNode) {
-        return null;
+        return (
+            <div className={`w-80 h-full border-l p-6 flex flex-col items-center justify-center text-center transition-colors z-10
+                ${isDark
+                    ? 'bg-[#0f0f1a]/95 border-white/10 text-white/30'
+                    : 'bg-white/95 border-slate-200 text-slate-400'
+                }`}>
+                <div className="text-4xl mb-4 opacity-50">🛠️</div>
+                <h3 className="font-semibold text-sm mb-2">No Node Selected</h3>
+                <p className="text-xs opacity-70">Click on a node to configure its properties.</p>
+            </div>
+        );
     }
 
-    // Input field styling
-    const inputClass = `w-full rounded-lg px-3 py-2.5 text-sm transition-all
-        focus:outline-none focus:ring-2 focus:ring-indigo-500/50
+    // Styles
+    const panelClass = `w-96 h-full border-l flex flex-col shadow-2xl z-20 transition-all duration-300
+        ${isDark ? 'bg-[#0f0f1a]/95 border-white/10' : 'bg-white/95 border-slate-200'}`;
+
+    const headerClass = `px-6 py-5 border-b flex items-start justify-between
+        ${isDark ? 'border-white/10 bg-white/5' : 'border-slate-100 bg-slate-50/50'}`;
+
+    const inputClass = `w-full rounded-lg px-3 py-2.5 text-sm transition-all outline-none border
         ${isDark
-            ? 'bg-white/5 border border-white/10 text-white placeholder-white/30'
-            : 'bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-500'
+            ? 'bg-black/20 border-white/10 text-white placeholder-white/20 focus:border-indigo-500/50 focus:bg-white/5'
+            : 'bg-white border-slate-200 text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20'
         }`;
-    const selectClass = `w-full rounded-lg px-3 py-2.5 text-sm transition-all appearance-none
-        focus:outline-none focus:ring-2 focus:ring-indigo-500/50
+
+    const selectClass = `w-full rounded-lg px-3 py-2.5 text-sm transition-all outline-none border appearance-none cursor-pointer
         ${isDark
-            ? 'bg-white/5 border border-white/10 text-white'
-            : 'bg-slate-50 border border-slate-300 text-slate-900'
+            ? 'bg-black/20 border-white/10 text-white focus:border-indigo-500/50'
+            : 'bg-white border-slate-200 text-slate-800 focus:border-indigo-500'
         }`;
-    const labelClass = `block text-xs font-semibold uppercase tracking-wide mb-2
-        ${isDark ? 'text-white/50' : 'text-slate-700'}`;
+
+    const labelClass = `block text-[11px] font-bold uppercase tracking-wider mb-1.5
+        ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`;
 
     const handleArrayChange = (key: string, index: number, value: string) => {
         const list = [...(selectedNode.data[key] || [])];
@@ -318,6 +334,21 @@ const NodeInspector = ({ selectedNode, setNodes, onDelete }: NodeInspectorProps)
             );
         }
 
+        // Helper for Password/Secret Input
+        const RenderPassword = ({ label, name, placeholder }: { label: string, name: string, placeholder?: string }) => (
+            <div className="mb-3">
+                <label className={labelClass}>{label}</label>
+                <input
+                    name={name}
+                    type="password"
+                    className={inputClass}
+                    value={selectedNode.data[name] || ''}
+                    placeholder={placeholder}
+                    onChange={handleChange}
+                />
+            </div>
+        );
+
         // === 4. Communication (Social, Email, Chat) ===
         if (type === 'slack' || type === 'discord') {
             return (
@@ -325,7 +356,10 @@ const NodeInspector = ({ selectedNode, setNodes, onDelete }: NodeInspectorProps)
                     <RenderSelect label="Action" name="method" options={['send: message', 'send: block', 'read: history']} />
                     <RenderInput label="Channel / User ID" name="channel" placeholder="#general or U123456" />
                     <RenderTextarea label="Message" name="message" placeholder="Hello world!" />
-                    <RenderInput label="Webhook URL (Optional)" name="webhookUrl" placeholder="https://hooks.slack.com/..." />
+                    <div className={`mt-4 pt-4 border-t ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
+                        <label className={labelClass}>Credentials</label>
+                        <RenderPassword label="Webhook URL" name="webhookUrl" placeholder="https://hooks.slack.com/..." />
+                    </div>
                 </>
             );
         }
@@ -336,31 +370,88 @@ const NodeInspector = ({ selectedNode, setNodes, onDelete }: NodeInspectorProps)
                     <RenderInput label="To" name="to" placeholder="recipient@example.com" />
                     <RenderInput label="Subject" name="subject" placeholder="Weekly Report" />
                     <RenderTextarea label="Body (HTML/Text)" name="body" rows={6} placeholder="<h1>Hello</h1>..." />
-                    <RenderInput label="SMTP Host (Optional)" name="smtp" placeholder="smtp.gmail.com" />
+                    <div className={`mt-4 pt-4 border-t ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
+                        <label className={labelClass}>SMTP Credentials (Optional)</label>
+                        <RenderInput label="SMTP Host" name="smtpHost" placeholder="smtp.gmail.com" />
+                        <RenderInput label="SMTP Port" name="smtpPort" placeholder="587" />
+                        <RenderInput label="SMTP User" name="smtpUser" placeholder="user@gmail.com" />
+                        <RenderPassword label="SMTP Password" name="smtpPass" placeholder="app-password" />
+                    </div>
                 </>
             );
         }
 
-        if (type === 'whatsapp' || type === 'telegram') {
+        if (type === 'whatsapp') {
             return (
                 <>
-                    <RenderInput label="Phone Number / Chat ID" name="recipient" placeholder="+1234567890" />
+                    <RenderInput label="Phone Number" name="to" placeholder="+1234567890" />
                     <RenderSelect label="Message Type" name="msgType" options={['Text', 'Template', 'Image']} />
                     {selectedNode.data.msgType === 'Template' ? (
                         <RenderInput label="Template Name" name="template" placeholder="hello_world" />
                     ) : (
                         <RenderTextarea label="Message Content" name="message" placeholder="Hello there!" />
                     )}
+                    <div className={`mt-4 pt-4 border-t ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
+                        <label className={labelClass}>Meta Credentials</label>
+                        <RenderInput label="Phone Number ID" name="phoneNumberId" placeholder="100609..." />
+                        <RenderPassword label="Access Token" name="accessToken" placeholder="EAAB..." />
+                    </div>
                 </>
             );
         }
 
-        if (type === 'twitter' || type === 'linkedin' || type === 'facebook' || type === 'instagram' || type === 'tiktok') {
+        if (type === 'telegram') {
+            return (
+                <>
+                    <RenderInput label="Chat ID" name="chatId" placeholder="123456789" />
+                    <RenderTextarea label="Message" name="message" placeholder="Hello from FlowWave!" />
+                    <div className={`mt-4 pt-4 border-t ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
+                        <label className={labelClass}>Bot Credentials</label>
+                        <RenderPassword label="Bot Token" name="botToken" placeholder="12345:ABC-..." />
+                    </div>
+                </>
+            );
+        }
+
+        if (type === 'twitter') {
+            return (
+                <>
+                    <RenderTextarea label="Tweet Content" name="content" rows={4} placeholder="What's happening?" />
+                    <div className={`mt-4 pt-4 border-t ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
+                        <label className={labelClass}>Twitter API Credentials</label>
+                        <RenderPassword label="API Key" name="apiKey" placeholder="..." />
+                        <RenderPassword label="API Secret" name="apiSecret" placeholder="..." />
+                        <RenderPassword label="Access Token" name="accessToken" placeholder="..." />
+                        <RenderPassword label="Access Secret" name="accessSecret" placeholder="..." />
+                    </div>
+                </>
+            );
+        }
+
+        if (type === 'linkedin') {
+            return (
+                <>
+                    <RenderTextarea label="Post Content" name="content" rows={4} placeholder="Share an update..." />
+                    <RenderSelect label="Visibility" name="visibility" options={['PUBLIC', 'CONNECTIONS']} />
+                    <div className={`mt-4 pt-4 border-t ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
+                        <label className={labelClass}>LinkedIn Credentials</label>
+                        <RenderInput label="Author URN (ID)" name="authorId" placeholder="urn:li:person:..." />
+                        <RenderPassword label="Access Token" name="accessToken" placeholder="AQX..." />
+                    </div>
+                </>
+            );
+        }
+
+        if (type === 'tiktok' || type === 'facebook' || type === 'instagram') {
             return (
                 <>
                     <RenderSelect label="Action" name="method" options={['Post Update', 'Upload Media', 'Get Analytics']} />
-                    <RenderTextarea label="Content / Caption" name="content" rows={4} placeholder="What's happening?" />
-                    <RenderInput label="Media URL (Optional)" name="mediaUrl" placeholder="https://..." />
+                    <RenderTextarea label="Caption" name="content" rows={4} placeholder="Check this out!" />
+                    <RenderInput label="Media URL" name="mediaUrl" placeholder="https://..." />
+                    <div className={`mt-4 pt-4 border-t ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
+                        <label className={labelClass}>Platform Credentials</label>
+                        <RenderPassword label="Access Token" name="accessToken" placeholder="..." />
+                    </div>
                 </>
             );
         }
