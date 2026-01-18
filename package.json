@@ -1,5 +1,6 @@
 {
   "name": "flowwave",
+  "version": "1.0.0",
   "description": "🌊 Open Source AI-Powered Workflow Automation Platform. Alternatives to n8n/Zapier. Built with React Flow, Node.js, and Local LLM (Ollama) support.",
   "private": true,
   "packageManager": "npm@10.0.0",
